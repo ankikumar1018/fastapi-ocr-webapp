@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,9 +41,17 @@
         }
 
         @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.4; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+
+            100% {
+                opacity: 1;
+            }
         }
 
         #extracted-text {
@@ -72,6 +81,7 @@
         }
     </style>
 </head>
+
 <body>
     <h1>OCR Processing Platform</h1>
     <form id="upload-form" enctype="multipart/form-data">
@@ -97,7 +107,7 @@
 
         // WebSocket connection
         const ws = new WebSocket(`ws://${window.location.host}/ws`);
-        ws.onmessage = function(event) {
+        ws.onmessage = function (event) {
             const message = event.data;
             if (message === "Processing complete") {
                 statusContainer.innerHTML = "Processing complete";
@@ -106,7 +116,7 @@
             }
         };
 
-        uploadForm.onsubmit = async function(event) {
+        uploadForm.onsubmit = async function (event) {
             event.preventDefault();
             const fileInput = document.getElementById("file-input");
             const formData = new FormData();
@@ -135,4 +145,5 @@
         };
     </script>
 </body>
+
 </html>
