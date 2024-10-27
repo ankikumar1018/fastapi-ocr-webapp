@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Platform</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #upload-form { margin: 20px; }
+        #notifications { margin: 20px; }
+        #extracted-text { margin: 20px; }
+    </style>
+</head>
+<body>
+    <h1>OCR Processing Platform</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" id="file-input" name="file" accept="image/*" required>
+        <button type="submit">Upload</button>
+    </form>
+    <div id="notifications"></div>
+    <div id="extracted-text"></div>
+
+    <script>
+        const uploadForm = document.getElementById("upload-form");
+        const notificationsDiv = document.getElementById("notifications");
+        const extractedTextDiv = document.getElementById("extracted-text");
+
+        // WebSocket connection
+        const ws = new WebSocket(`ws://${window.location.host}/ws`);
+        ws.onmessage = function(event) {
+            const message = event.data;
+            notificationsDiv.innerHTML += `<p>${message}</p>`;
+        };
+
+        uploadForm.onsubmit = async function(event) {
+            event.preventDefault();
+            const fileInput = document.getElementById("file-input");
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            const response = await fetch("/upload/", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+            extractedTextDiv.innerHTML = `<h3>Extracted Text:</h3><p>${data.extracted_text}</p>`;
+        };
+    </script>
+</body>
+</html>
